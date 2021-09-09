@@ -1,33 +1,54 @@
 PATH := ${CURDIR}/bin:$(PATH)
 
-
-.PHONY: bench
-bench: bench-clickhouse bench-postgres
-
 .PHONY: clean
 clean: goose-postgres-up goose-postgres-down goose-clickhouse-up goose-clickhouse-down
 
-.PHONY: bench-clickhouse
-bench-clickhouse: goose-clickhouse-up bench-clickhouse-insert bench-clickhouse-query
+.PHONY: bench-clickhouse-100
+bench-clickhouse-100: goose-clickhouse-up bench-clickhouse-insert-100 bench-clickhouse-query-100
 
-.PHONY: bench-clickhouse-insert
-bench-clickhouse-insert:
-	go test -bench=BenchmarkClickHouseInsert -benchtime=1x -run=None -benchmem  ./driver/...
+.PHONY: bench-clickhouse-insert-100
+bench-clickhouse-insert-100:
+	go test -bench=BenchmarkClickHouseInsert -benchtime=100x -run=None -benchmem -timeout 1h ./driver/...
 
-.PHONY: bench-clickhouse-query
-bench-clickhouse-query:
-	go test -bench=BenchmarkClickHouseQuery -benchtime=1x -run=None -benchmem  ./driver/...
+.PHONY: bench-clickhouse-query-100
+bench-clickhouse-query-100:
+	go test -bench=BenchmarkClickHouseQuery -benchtime=100x -run=None -benchmem -timeout 1h ./driver/...
 
-.PHONY: bench-postgres
-bench-postgres: goose-postgres-up bench-postgres-insert bench-postgres-query
+.PHONY: bench-postgres-100
+bench-postgres-100: goose-postgres-up bench-postgres-insert-100 bench-postgres-query-100
 
-.PHONY: bench-postgres-insert
-bench-postgres-insert:
-	go test -bench=BenchmarkPostgresInsert -benchtime=1x -run=None -benchmem  -timeout 2h ./driver/...
+.PHONY: bench-postgres-insert-100
+bench-postgres-insert-100:
+	go test -bench=BenchmarkPostgresInsert -benchtime=100x -run=None -benchmem -timeout 1h ./driver/...
 
-.PHONY: bench-postgres-query
-bench-postgres-query:
-	go test -bench=BenchmarkPostgresQuery -benchtime=1x -run=None -benchmem  ./driver/...
+.PHONY: bench-postgres-query-100
+bench-postgres-query-100:
+	go test -bench=BenchmarkPostgresQuery -benchtime=100x -run=None -benchmem  -timeout 1h  ./driver/...
+
+
+.PHONY: bench-clickhouse-1000
+bench-clickhouse-1000: goose-clickhouse-up bench-clickhouse-insert-1000 bench-clickhouse-query-1000
+
+.PHONY: bench-clickhouse-insert-1000
+bench-clickhouse-insert-1000:
+	go test -bench=BenchmarkClickHouseInsert -benchtime=1000x -run=None -benchmem -timeout 2h ./driver/...
+
+.PHONY: bench-clickhouse-query-1000
+bench-clickhouse-query-1000:
+	go test -bench=BenchmarkClickHouseQuery -benchtime=1000x -run=None -benchmem -timeout 2h ./driver/...
+
+.PHONY: bench-postgres-1000
+bench-postgres-1000: goose-postgres-up bench-postgres-insert-1000 bench-postgres-query-1000
+
+.PHONY: bench-postgres-insert-1000
+bench-postgres-insert-1000:
+	go test -bench=BenchmarkPostgresInsert -benchtime=1000x -run=None -benchmem -timeout 2h ./driver/...
+
+.PHONY: bench-postgres-query-1000
+bench-postgres-query-1000:
+	go test -bench=BenchmarkPostgresQuery -benchtime=1000x -run=None -benchmem  -timeout 2h  ./driver/...
+
+
 
 .PHONY: goose-postgres-up
 goose-postgres-up: bin/goose

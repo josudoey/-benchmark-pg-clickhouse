@@ -15,7 +15,12 @@ func BenchmarkPostgresInsert(b *testing.B) {
 	defer db.Close()
 
 	for i := 0; i < b.N; i++ {
-		err = PostgresInsertPostMeasurements(db, model.GenerateDefaultPostMeasurements())
+		if b.N == 1 {
+			// skip per-test
+			break
+		}
+		memberID := int64(i + 1)
+		err = PostgresInsertPostMeasurements(db, model.GenerateBenchPostMeasurements(memberID))
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -31,6 +36,7 @@ func BenchmarkPostgresQuery(b *testing.B) {
 	begin := now.AddDate(0, 0, -365).Format("2006-01") + "-01"
 	end := now.Format("2006-01") + "-01"
 	for i := 0; i < b.N; i++ {
+		memberID := int64(i + 1)
 		_, err := db.Exec(`
 SELECT 
   member_id,type, 
@@ -39,7 +45,7 @@ FROM post_measurements
 WHERE member_id = ? 
   AND (date BETWEEN ? AND ?) 
 GROUP BY member_id,type;`,
-			i+1, begin, end,
+			memberID, begin, end,
 		)
 		if err != nil {
 			b.Fatal(err)
@@ -55,7 +61,12 @@ func BenchmarkClickHouseInsert(b *testing.B) {
 	defer db.Close()
 
 	for i := 0; i < b.N; i++ {
-		err = ClickHouseInsertPostMeasurements(db, model.GenerateDefaultPostMeasurements())
+		if b.N == 1 {
+			// skip per-test
+			break
+		}
+		memberID := int64(i + 1)
+		err = ClickHouseInsertPostMeasurements(db, model.GenerateBenchPostMeasurements(memberID))
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -71,6 +82,7 @@ func BenchmarkClickHouseQuery(b *testing.B) {
 	begin := now.AddDate(0, 0, -365)
 	end := now
 	for i := 0; i < b.N; i++ {
+		memberID := int64(i + 1)
 		rows, err := db.Query(`
 SELECT 
 	member_id,type, 
@@ -78,8 +90,8 @@ SELECT
 FROM post_measurements 
 WHERE member_id = ? 
 	AND (toYYYYMM(date) BETWEEN toYYYYMM(?) AND toYYYYMM(?)) 
-	GROUP BY member_id,type;`,
-			i+1, begin, end,
+GROUP BY member_id,type;`,
+			memberID, begin, end,
 		)
 		if err != nil {
 			b.Fatal(err)

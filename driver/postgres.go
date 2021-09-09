@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"context"
 	"os"
 
 	"github.com/go-pg/pg/v10"
@@ -20,11 +21,14 @@ func NewDefaultPostgresDB() (*pg.DB, error) {
 }
 
 func PostgresInsertPostMeasurements(db *pg.DB, items <-chan *model.PostMeasurement) error {
-	for measurement := range items {
-		_, err := db.Model(measurement).Insert()
-		if err != nil {
-			return err
+	ctx := context.Background()
+	return db.RunInTransaction(ctx, func(tx *pg.Tx) error {
+		for measurement := range items {
+			_, err := tx.Model(measurement).Insert()
+			if err != nil {
+				return err
+			}
 		}
-	}
-	return nil
+		return nil
+	})
 }

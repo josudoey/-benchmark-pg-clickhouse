@@ -18,15 +18,41 @@ type PostMeasurement struct {
 
 var Rand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
-func GenerateDefaultPostMeasurements() <-chan *PostMeasurement {
+func GenerateBenchPostMeasurements(memberID int64) <-chan *PostMeasurement {
 	postCount := 100
-	memberCount := 1000
 	dayCount := 365
 	typ := "viewed"
-	beginPostID := int64(1)
-	beginMemberID := int64(1)
 	maxQuantity := int64(1000)
-	return GenerateSamplePostMeasurements(postCount, memberCount, dayCount, typ, beginPostID, beginMemberID, maxQuantity)
+	ch := make(chan *PostMeasurement, 1)
+	go func() {
+		for m := range GenerateMemberPostMeasurements(memberID, postCount, dayCount, typ, maxQuantity) {
+			ch <- m
+		}
+		close(ch)
+	}()
+	return ch
+}
+
+func GenerateMemberPostMeasurements(memberID int64, postCount int, dayCount int, typ string, maxQuantity int64) <-chan *PostMeasurement {
+	now := time.Now()
+	ch := make(chan *PostMeasurement, 1)
+	go func() {
+		for p := 0; p < postCount; p++ {
+			postID := Rand.Int63()
+			for d := 0; d < dayCount; d++ {
+				date := now.AddDate(0, 0, -d)
+				ch <- &PostMeasurement{
+					MemeberID: memberID,
+					PostID:    postID,
+					Type:      typ,
+					Date:      &date,
+					Quantity:  Rand.Int63n(maxQuantity) + 1,
+				}
+			}
+		}
+		close(ch)
+	}()
+	return ch
 }
 
 func GenerateSamplePostMeasurements(postCount int, memberCount int, dayCount int, typ string, beginPostID int64, beginMemberID int64, maxQuantity int64) <-chan *PostMeasurement {
