@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE TABLE post_measurements(
+CREATE TABLE post_measurements (
   id Int64,
   member_id Int64,
   post_id Int64,
