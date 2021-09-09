@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/josudoey/benchmark-pg-clickhouse/driver"
-	goosepg "github.com/josudoey/benchmark-pg-clickhouse/goose/postgres"
-	"github.com/josudoey/benchmark-pg-clickhouse/model"
+	"github.com/josudoey/bench-pg-ch/driver"
+	goosepg "github.com/josudoey/bench-pg-ch/goose/postgres"
+	"github.com/josudoey/bench-pg-ch/model"
 	"github.com/spf13/cobra"
 )
 

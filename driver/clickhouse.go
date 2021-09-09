@@ -6,7 +6,7 @@ import (
 	"time"
 
 	_ "github.com/ClickHouse/clickhouse-go"
-	"github.com/josudoey/benchmark-pg-clickhouse/model"
+	"github.com/josudoey/bench-pg-ch/model"
 )
 
 func NewClickHouseDB(clickhouseURL string) (*sql.DB, error) {

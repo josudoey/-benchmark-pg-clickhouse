@@ -5,9 +5,9 @@ import (
 	"os"
 
 	_ "github.com/ClickHouse/clickhouse-go"
-	"github.com/josudoey/benchmark-pg-clickhouse/driver"
-	goosech "github.com/josudoey/benchmark-pg-clickhouse/goose/clickhouse"
-	"github.com/josudoey/benchmark-pg-clickhouse/model"
+	"github.com/josudoey/bench-pg-ch/driver"
+	goosech "github.com/josudoey/bench-pg-ch/goose/clickhouse"
+	"github.com/josudoey/bench-pg-ch/model"
 	"github.com/spf13/cobra"
 )
 

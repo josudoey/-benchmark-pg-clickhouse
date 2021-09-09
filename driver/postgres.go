@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/go-pg/pg/v10"
-	"github.com/josudoey/benchmark-pg-clickhouse/model"
+	"github.com/josudoey/bench-pg-ch/model"
 )
 
 func NewPostgresDB(postgresURL string) (*pg.DB, error) {

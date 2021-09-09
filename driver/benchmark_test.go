@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/josudoey/benchmark-pg-clickhouse/model"
+	"github.com/josudoey/bench-pg-ch/model"
 )
 
 func BenchmarkPostgresInsert(b *testing.B) {
