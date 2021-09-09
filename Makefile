@@ -1,7 +1,15 @@
 PATH := ${CURDIR}/bin:$(PATH)
 
+default: bench-clickhouse-1000 bench-postgres-1000
+
 .PHONY: clean
-clean: goose-postgres-up goose-postgres-down goose-clickhouse-up goose-clickhouse-down
+clean: clean-clickhouse clean-postgres
+
+.PHONY: clean-clickhouse
+clean-clickhouse: goose-clickhouse-up goose-clickhouse-down
+
+PHONY: clean-postgres
+clean-postgres: goose-postgres-up goose-postgres-down
 
 .PHONY: bench-clickhouse-100
 bench-clickhouse-100: goose-clickhouse-up bench-clickhouse-insert-100 bench-clickhouse-query-100
